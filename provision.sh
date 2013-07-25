@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function usage {
-  echo "usage: `basename "$0"` target_directory"
+  echo -e "usage: `basename "$0"` target_directory\n"
   exit
 }
 
@@ -16,8 +16,9 @@ PHP_VER="5.5.1"
 MARIA_DB_VER="5.5.32"
 
 TARGET_DIR="$1"
-if [ "$TARGET_DIR" == `basename $TARGET_DIR` ]; then
-  TARGET_DIR="`pwd`/$TARGET_DIR"
+if [[ "$TARGET_DIR" != /* ]]; then
+  echo -e "target_directory must be an absolute path.\n"
+  usage
 fi
 
 TIMESTAMP=`date "+%Y-%m-%d_at_%H-%M-%S"`
