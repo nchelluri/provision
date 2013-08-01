@@ -15,18 +15,6 @@ HTTPD_VER="2.4.6"
 PHP_VER="5.5.1"
 MARIA_DB_VER="5.5.32"
 
-TARGET_DIR="$1"
-if [[ "$TARGET_DIR" != /* ]]; then
-  echo -e "target_directory must be an absolute path.\n"
-  usage
-fi
-
-TIMESTAMP=`date "+%Y-%m-%d_at_%H-%M-%S"`
-TMP_DIR="/tmp/`basename $TARGET_DIR`/$TIMESTAMP"
-
-echo "About to setup environment in $TARGET_DIR. Hit any key to continue or CTRL-C to abort..."
-read
-
 function log {
   if [ "$#" -eq 2 ]; then
     local ECHO_OPTS="$1e"
@@ -80,13 +68,6 @@ function verify_md5 {
     abort 40 "MD5 Digest for $FILENAME is invalid! Expected '$EXPECTED' but got '$ACTUAL'."
   fi
 }
-
-echo -n "Creating scratch directory $TMP_DIR... "
-mkdir -p "$TMP_DIR"
-echo "complete."
-echo
-
-cd "$TMP_DIR"
 
 function install_apache {
   local APACHE_MIRRORS_FILE="apache-mirrors.txt"
@@ -160,6 +141,26 @@ function install_mariadb {
   log "complete."
   log
 }
+
+# main
+TARGET_DIR="$1"
+if [[ "$TARGET_DIR" != /* ]]; then
+  echo -e "target_directory must be an absolute path.\n"
+  usage
+fi
+
+TIMESTAMP=`date "+%Y-%m-%d_at_%H-%M-%S"`
+TMP_DIR="/tmp/`basename $TARGET_DIR`/$TIMESTAMP"
+
+echo "About to setup environment in $TARGET_DIR. Hit any key to continue or CTRL-C to abort..."
+read
+
+echo -n "Creating scratch directory $TMP_DIR... "
+mkdir -p "$TMP_DIR"
+echo "complete."
+echo
+
+cd "$TMP_DIR"
 
 install_apache
 install_php
